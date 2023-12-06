@@ -23,80 +23,48 @@ We will create 3 microservices :
       Create three separate Spring Boot projects (either via Spring Initializr or your preferred method). 
 
   2. Add Dependencies :
-      For Account and Fund Transfer service, add following dependencies : 
-         <dependency>
-        			<groupId>org.springframework.boot</groupId>
-        			<artifactId>spring-boot-starter-data-jpa</artifactId>
-        	</dependency>
-        	<dependency>
-        			<groupId>org.springframework.boot</groupId>
-        			<artifactId>spring-boot-starter-web</artifactId>
-        	</dependency>
-          <dependency>
-        			<groupId>com.h2database</groupId>
-        			<artifactId>h2</artifactId>
-        			<scope>runtime</scope>
-	    	  </dependency>
+      For Report Service, add just web dependency :
+     ![image](https://github.com/dnyanesh-genpact/Aggregator-Design-Pattern/assets/152908296/00294a58-3a08-48e3-8217-60ef1a7bd454)
 
-      For Report service, add just web dependency : 
-          <dependency>
-        			<groupId>org.springframework.boot</groupId>
-        			<artifactId>spring-boot-starter-web</artifactId>
-	      	</dependency>
+      For Account and Fund Transfer service, add following dependencies :
+        ![image](https://github.com/dnyanesh-genpact/Aggregator-Design-Pattern/assets/152908296/cf699ba3-9153-4ce7-8c1c-ea5c642f5430)
 
-  3. Business Logic :
+  4. Business Logic :
        1) Account Service - Create a REST API to get an account by account number.
        2) Fund Transfer Service - Create a REST API to get transaction details for specific account.
        3) Report Service(Aggregator Service) - Create a REST API to call above services and aggregate the data.
 
-  4. Aggregation Logic : 
-      @RestController
-      @RequestMapping("/banking/report")
-      public class ReportController {
-      	
-      	@Autowired
-      	TransactionReportService txnReportService;
-      	
-      	@GetMapping("getTxnDetails/{accountNumber}")
-      	public TransactionDetails getTransactionDetails(@PathVariable String accountNumber){
-      		return txnReportService.getTransactionDetails(accountNumber);				//Returning aggregated response
-      	}
-      }
+  5. Aggregation Logic : 
 
-  5. Run the services : 
+     ![image](https://github.com/dnyanesh-genpact/Aggregator-Design-Pattern/assets/152908296/dfd886fd-73d8-4662-af5e-84bb2bb61e4f)
+
+  6. Run the services : 
       Start all 3 services i.e. Account Service, Fund Transfer Service and Aggregator Service.
 
-  6. Test and connect h2 DB connection : 
+  7. Test and connect h2 DB connection : 
       Connect to Account Service DB using jdbc:h2:mem:AccountService_DB on h2 console.
       Connect to Account Service DB using jdbc:h2:mem:FundTransfer_DB on h2 console.
       
-  7. Make few post calls(So that we can have sample data in DB to fetch later) on both Account and Fund Transfer Services using following URLs : 
+  8. Make few post calls(So that we can have sample data in DB to fetch later) on both Account and Fund Transfer Services using following URLs : 
       Account Service POST call - http://localhost:5051/banking/account/createAccount
       Fund Transfer Service POST call - http://localhost:5052/banking/fundTransfer/newFundTransferRequest
 
-  8. Test Aggregator
+  9. Test Aggregator
       Test by calling http://localhost:5055/banking/report/getTxnDetails/976435618
 
 
 
 # Microservices Configuration
-Customize the behavior of services by editing the application.properties file. Adjust settings such as port, logging, and error handling.
+Customize the behavior of services by editing the respective application.properties file. Adjust settings such as port, logging, and error handling.
 
-  Account Service : 
-    server.port=5051
-    spring.application.name= AccountService
-    spring.h2.console.enabled=true
-    spring.datasource.url=jdbc:h2:mem:AccountService_DB
+ ![image](https://github.com/dnyanesh-genpact/Aggregator-Design-Pattern/assets/152908296/bfda74dc-097c-4b7e-bcff-bfa827195d0e)
 
-  Fund Transfer Service : 
-    server.port=5052
-    spring.application.name=FundTransferService
-    spring.h2.console.enabled=true
-    spring.datasource.url=jdbc:h2:mem:FundTransfer_DB
 
-  Report Srevice : 
-    spring.application.name=aggregator-report-service
-    server.port=5055
+ ![image](https://github.com/dnyanesh-genpact/Aggregator-Design-Pattern/assets/152908296/cbb933cf-a442-47f3-a23b-d073329d5cf3)
+
+
+  ![image](https://github.com/dnyanesh-genpact/Aggregator-Design-Pattern/assets/152908296/345913e1-0775-4bc4-99d4-d672ef00a59f)
+
 
 
 # Sample Code for Controllers and Models
